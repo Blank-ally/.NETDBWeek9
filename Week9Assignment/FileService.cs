@@ -149,8 +149,8 @@ public class FileService : AbstractFileServices
         {
             case "1":
 
-                Console.WriteLine("Movie Id");
-                var id = Console.ReadLine();
+               // Console.WriteLine("Movie Id");
+                var id = Convert.ToString(movieList.Count + 1);
 
 
                 Console.WriteLine("Title");
@@ -171,13 +171,14 @@ public class FileService : AbstractFileServices
 
                 Movie movie = new Movie(id, title, genres);
                 sw.WriteLine(JsonConvert.SerializeObject(movie));
-
+                mediaList.Add(movie);
+                movieList.Add(movie);
                 sw.Close();
 
                 break;
             case "2":
-                Console.WriteLine("Show Id");
-                id = Console.ReadLine();
+                //Console.WriteLine("Show Id");
+                id = Convert.ToString(showList.Count + 1); ;
 
                 Console.WriteLine("Title");
                 title = Console.ReadLine();
@@ -204,13 +205,14 @@ public class FileService : AbstractFileServices
                 Show show = new Show(id, title,season,episode,writers);
 
                 sw.WriteLine(JsonConvert.SerializeObject(show));
-
+                mediaList.Add(show);
+                showList.Add(show);
                 sw.Close();
 
                 break;
             case "3":
-                Console.WriteLine("Video Id");
-                id = Console.ReadLine();
+               // Console.WriteLine("Video Id");
+                id = Convert.ToString(videoList.Count + 1);
 
                 Console.WriteLine("Title");
                 title = Console.ReadLine();
@@ -247,6 +249,8 @@ public class FileService : AbstractFileServices
                 Video video = new Video(id, title, formats,length,regions);
 
                 sw.WriteLine(JsonConvert.SerializeObject(video));
+                mediaList.Add(video);
+                videoList.Add(video);
                 sw.Close();
 
                 break;
@@ -262,9 +266,18 @@ public class FileService : AbstractFileServices
         Console.WriteLine("What Media are you looking for?");
         var search = Console.ReadLine();
 
-        mediaList.ForEach(m => Console.WriteLine($"Your Media: {m.Title}"));
-        var results = mediaList.Where(m => m.Title.Contains(search,StringComparison.CurrentCultureIgnoreCase)).ToList();
-     
-       results.ForEach(m => Console.WriteLine($"Your Media: {m.Title}"));
+      var movies = movieList.Where(m => m.Title.Contains(search, StringComparison.CurrentCultureIgnoreCase)).ToList();
+     // movies.ForEach(m => Console.WriteLine(m.Title));
+        var shows = showList.Where(m => m.Title.Contains(search, StringComparison.CurrentCultureIgnoreCase)).ToList();
+     //   shows.ForEach(m => Console.WriteLine(m.Title));
+        var videos = videoList.Where(m => m.Title.Contains(search, StringComparison.CurrentCultureIgnoreCase)).ToList();
+      //  videos.ForEach(m => Console.WriteLine(m.Title));
+        List<Media> results = new List<Media>();
+        results.AddRange(movies);
+        results.AddRange(shows);
+        results.AddRange(videos);
+
+       // results.ForEach(m => Console.WriteLine($"Your Media: {m}"));
+        results.ForEach(m => Console.WriteLine($"Your Media: {m.Title}"));
     }
 }
