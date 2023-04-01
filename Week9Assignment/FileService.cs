@@ -282,7 +282,8 @@ public class FileService : AbstractFileServices
        results.AddRange(videos);
        if (results.Count > 0)
        {
-           results.ForEach(m => Console.WriteLine($"Your Media: {m}"));
+           Console.WriteLine($"{results.Count} Result(s) found.");
+            results.ForEach(m => Console.WriteLine($"Your Media: {m}"));
        }
        else
        {
