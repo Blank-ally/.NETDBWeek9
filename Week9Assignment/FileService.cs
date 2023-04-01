@@ -272,12 +272,22 @@ public class FileService : AbstractFileServices
      //   shows.ForEach(m => Console.WriteLine(m.Title));
         var videos = videoList.Where(m => m.Title.Contains(search, StringComparison.CurrentCultureIgnoreCase)).ToList();
       //  videos.ForEach(m => Console.WriteLine(m.Title));
-        List<Media> results = new List<Media>();
-        results.AddRange(movies);
-        results.AddRange(shows);
-        results.AddRange(videos);
 
-       // results.ForEach(m => Console.WriteLine($"Your Media: {m}"));
-        results.ForEach(m => Console.WriteLine($"Your Media: {m.Title}"));
+
+
+        List<Media> results = new List<Media>(); 
+        
+       results.AddRange(movies);
+      results.AddRange(shows);
+       results.AddRange(videos);
+       if (results.Count > 0)
+       {
+           results.ForEach(m => Console.WriteLine($"Your Media: {m}"));
+       }
+       else
+       {
+           Console.WriteLine("Sorry we could not find a match to your search");
+       }
+        //results.ForEach(m => Console.WriteLine($"Your Media: {m.Title}"));
     }
 }
