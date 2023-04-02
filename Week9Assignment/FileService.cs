@@ -8,6 +8,7 @@ using System.IO;
 using System.Threading.Channels;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+
 public class FileService : AbstractFileServices
 {
     private readonly Validate check = new();
@@ -51,7 +52,7 @@ public class FileService : AbstractFileServices
 
                         if (mediaFiles[i] == "movies.csv")
                         {
-                            
+
                             line = sr.ReadLine();
                             var des = validate.validateMovie(line);
                             mediaList.Add(des);
@@ -89,7 +90,7 @@ public class FileService : AbstractFileServices
                 var sw = new StreamWriter(file, true);
                 foreach (Media media in mediaList)
                 {
-                   
+
 
                     sw.WriteLine(JsonConvert.SerializeObject(media));
                 }
@@ -109,7 +110,7 @@ public class FileService : AbstractFileServices
             var sr = new StreamReader(file);
             try
             {
-               
+
 
 
                 while (!sr.EndOfStream)
@@ -132,7 +133,7 @@ public class FileService : AbstractFileServices
             for (var i = 0; i < mediaList.Count; i++)
             {
                 Console.WriteLine(mediaList[i]);
-              
+
             }
         }
     }
@@ -149,7 +150,7 @@ public class FileService : AbstractFileServices
         {
             case "1":
 
-               // Console.WriteLine("Movie Id");
+                // Console.WriteLine("Movie Id");
                 var id = Convert.ToString(movieList.Count + 1);
 
 
@@ -178,7 +179,8 @@ public class FileService : AbstractFileServices
                 break;
             case "2":
                 //Console.WriteLine("Show Id");
-                id = Convert.ToString(showList.Count + 1); ;
+                id = Convert.ToString(showList.Count + 1);
+                ;
 
                 Console.WriteLine("Title");
                 title = Console.ReadLine();
@@ -202,7 +204,7 @@ public class FileService : AbstractFileServices
                 }
 
 
-                Show show = new Show(id, title,season,episode,writers);
+                Show show = new Show(id, title, season, episode, writers);
 
                 sw.WriteLine(JsonConvert.SerializeObject(show));
                 mediaList.Add(show);
@@ -211,7 +213,7 @@ public class FileService : AbstractFileServices
 
                 break;
             case "3":
-               // Console.WriteLine("Video Id");
+                // Console.WriteLine("Video Id");
                 id = Convert.ToString(videoList.Count + 1);
 
                 Console.WriteLine("Title");
@@ -219,7 +221,7 @@ public class FileService : AbstractFileServices
 
                 Console.WriteLine("How many formats");
                 var format = Convert.ToInt32(Console.ReadLine());
-                
+
 
 
                 var formats = new string[format];
@@ -246,7 +248,7 @@ public class FileService : AbstractFileServices
                 }
 
 
-                Video video = new Video(id, title, formats,length,regions);
+                Video video = new Video(id, title, formats, length, regions);
 
                 sw.WriteLine(JsonConvert.SerializeObject(video));
                 mediaList.Add(video);
@@ -262,33 +264,110 @@ public class FileService : AbstractFileServices
     }
 
     public void Search()
+
     {
-        Console.WriteLine("What Media are you looking for?");
-        var search = Console.ReadLine();
-
-      var movies = movieList.Where(m => m.Title.Contains(search, StringComparison.CurrentCultureIgnoreCase)).ToList();
-     // movies.ForEach(m => Console.WriteLine(m.Title));
-        var shows = showList.Where(m => m.Title.Contains(search, StringComparison.CurrentCultureIgnoreCase)).ToList();
-     //   shows.ForEach(m => Console.WriteLine(m.Title));
-        var videos = videoList.Where(m => m.Title.Contains(search, StringComparison.CurrentCultureIgnoreCase)).ToList();
-      //  videos.ForEach(m => Console.WriteLine(m.Title));
+        string search;
+        List<Media> results = new List<Media>();
 
 
+        Console.WriteLine("what Media would you like to search\n1.All\n2.Movies\n3.Shows\n4.Videos");
+        var mediaType = Console.ReadLine();
 
-        List<Media> results = new List<Media>(); 
+        switch (mediaType)
+        {
+            case "1":
+                Console.WriteLine("What Media are you looking for?");
+                search = Console.ReadLine();
+
+                var movies = movieList.Where(m => m.Title.Contains(search, StringComparison.CurrentCultureIgnoreCase)).ToList();
+
+                var shows = showList.Where(m => m.Title.Contains(search, StringComparison.CurrentCultureIgnoreCase)).ToList();
+
+                var videos = videoList.Where(m => m.Title.Contains(search, StringComparison.CurrentCultureIgnoreCase)).ToList();
+
+
+
+                results.AddRange(movies);
+                results.AddRange(shows);
+                results.AddRange(videos);
+                if (results.Count > 0)
+                {
+                    Console.WriteLine($"{results.Count} Result(s) found Your Media:");
+                    results.ForEach(m => Console.WriteLine($"{m}"));
+                }
+                else
+                {
+                    Console.WriteLine("Sorry we could not find a match to your search");
+                }
+   
         
-       results.AddRange(movies);
-      results.AddRange(shows);
-       results.AddRange(videos);
-       if (results.Count > 0)
-       {
-           Console.WriteLine($"{results.Count} Result(s) found.");
-            results.ForEach(m => Console.WriteLine($"Your Media: {m}"));
-       }
-       else
-       {
-           Console.WriteLine("Sorry we could not find a match to your search");
-       }
-        //results.ForEach(m => Console.WriteLine($"Your Media: {m.Title}"));
+        break;
+            case "2":
+                Console.WriteLine("What Movie(s) are you looking for?");
+                search = Console.ReadLine();
+
+
+                movies = movieList.Where(m => m.Title.Contains(search, StringComparison.CurrentCultureIgnoreCase)).ToList();
+
+                results.AddRange(movies);
+
+                if (results.Count > 0)
+                {
+                    Console.WriteLine($"{results.Count} Result(s) found Your Media:");
+                    results.ForEach(m => Console.WriteLine($"{m}"));
+                }
+                else
+                {
+                    Console.WriteLine("Sorry we could not find a match to your search");
+                }
+
+
+
+                break;
+            case "3":
+                Console.WriteLine("What Show(s) are you looking for?");
+                search = Console.ReadLine();
+
+                shows = showList.Where(m => m.Title.Contains(search, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                
+                results.AddRange(shows);
+
+                if (results.Count > 0)
+                {
+                    Console.WriteLine($"{results.Count} Result(s) found Your Media:");
+                    results.ForEach(m => Console.WriteLine($"{m}"));
+                }
+                else
+                {
+                    Console.WriteLine("Sorry we could not find a match to your search");
+                }
+
+                break;
+            case "4":
+                Console.WriteLine("What Video(s) are you looking for?");
+                search = Console.ReadLine();
+
+                videos = videoList.Where(m => m.Title.Contains(search, StringComparison.CurrentCultureIgnoreCase)).ToList();
+               
+                results.AddRange(videos);
+
+                if (results.Count > 0)
+                {
+                    Console.WriteLine($"{results.Count} Result(s) found Your Media:");
+                    results.ForEach(m => Console.WriteLine($"{m}"));
+                }
+                else
+                {
+                    Console.WriteLine("Sorry we could not find a match to your search");
+                }
+
+                break;
+            default:
+                Console.WriteLine("Sorry your input was not valid only 1-4 Is valid input");
+                break;
+
+        }
+
+
     }
 }
